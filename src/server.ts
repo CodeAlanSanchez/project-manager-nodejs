@@ -4,7 +4,7 @@ import express from 'express';
 import session from 'express-session';
 
 import { createRoutes } from './utils/routing';
-import { bugRouter, projectRouter, userRouter } from './routes';
+import { bugRouter, inviteRouter, projectRouter, userRouter } from './routes';
 
 dotenv.config();
 
@@ -36,6 +36,7 @@ createRoutes(
     { router: userRouter, name: '' },
     { router: projectRouter, name: 'project' },
     { router: bugRouter, name: 'bug' },
+    { router: inviteRouter, name: 'invite' },
   ],
   app
 );
