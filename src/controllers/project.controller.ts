@@ -1,4 +1,3 @@
-import { nameDescCheck } from '../utils/nameAndDescriptionCheck';
 import { parseId } from './../utils/parseId';
 import { PrismaClient } from '@prisma/client';
 import { Response } from 'express';
@@ -26,12 +25,10 @@ export const projects = async (req: MyRequest, res: Response) => {
 
 // Returns project if user is a member
 export const project = async (req: MyRequest, res: Response) => {
-  const id = parseId(req.params.id);
+  const id = parseId(req.params.id!);
 
-  if (id === null || id === NaN) {
-    return res
-      .status(400)
-      .json({ error: { field: 'id', message: 'invalid id' } });
+  if (!id) {
+    return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
   }
 
   const project = await prisma.project.findFirst({
@@ -64,8 +61,6 @@ export const project = async (req: MyRequest, res: Response) => {
 export const createProject = async (req: MyRequest, res: Response) => {
   const { name, description } = req.body;
 
-  nameDescCheck(name, description, 'project', res);
-
   const project = await prisma.project.create({
     data: { name, description },
     select: {
@@ -81,15 +76,13 @@ export const createProject = async (req: MyRequest, res: Response) => {
       .json({ error: { field: 'unknown', message: 'something went wrong' } });
   }
 
-  const member = await prisma.member.create({
+  await prisma.member.create({
     data: {
       isOwner: true,
       userId: req.session.userId!,
       projectId: project.id,
     },
   });
-
-  console.log(member);
 
   return res.status(201).json({ data: project });
 };
@@ -98,15 +91,11 @@ export const createProject = async (req: MyRequest, res: Response) => {
 export const updateProject = async (req: MyRequest, res: Response) => {
   const { name, description } = req.body;
 
-  const id = parseId(req.body.id);
+  const id = parseId(req.params.id!);
 
-  if (id === null || id === NaN) {
-    return res
-      .status(400)
-      .json({ error: { field: 'id', message: 'invalid id' } });
+  if (!id) {
+    return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
   }
-
-  nameDescCheck(name, description, 'project', res);
 
   const updatedProject = await prisma.project.update({
     where: { id: id },
