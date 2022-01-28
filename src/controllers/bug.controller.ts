@@ -6,7 +6,6 @@ import { MyRequest } from './../utils/request';
 
 const prisma = new PrismaClient();
 
-// Return bugs from specific project where user is a member in
 export const bugs = async (req: MyRequest, res: Response) => {
   const id = parseId(req.body.id);
 
@@ -38,7 +37,7 @@ export const bug = async (req: MyRequest, res: Response) => {
     return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
   }
 
-  const bug = prisma.bug.findFirst({
+  const bug = await prisma.bug.findFirst({
     where: {
       AND: [
         { id },
@@ -122,7 +121,7 @@ export const updateBug = async (req: MyRequest, res: Response) => {
     return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
   }
 
-  if (!['open', 'started', 'closed'].indexOf(status)) {
+  if (['open', 'started', 'closed'].indexOf(status) === -1) {
     return res.status(400).json({
       error: {
         field: 'status',
