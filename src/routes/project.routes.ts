@@ -7,13 +7,15 @@ import {
 } from './../controllers/project.controller';
 import express from 'express';
 import auth from '../middleware/auth';
+import id from '../middleware/bodyId';
+import nameDesc from '../middleware/nameDesc';
 
 const router = express.Router();
 
-router.get('/', auth, projects);
-router.get('/:id', auth, project);
-router.post('/', auth, createProject);
-router.put('/:id', auth, updateProject);
-router.delete('/:id', auth, deleteProject);
+router.get('/', auth, id, projects);
+router.get('/:id', auth, id, project);
+router.post('/', auth, id, nameDesc, createProject);
+router.put('/:id', auth, id, nameDesc, updateProject);
+router.delete('/:id', auth, id, deleteProject);
 
 export default router;
