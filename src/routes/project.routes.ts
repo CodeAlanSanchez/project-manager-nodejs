@@ -12,7 +12,7 @@ import nameDesc from '../middleware/nameDesc';
 
 const router = express.Router();
 
-router.get('/', auth, id, projects);
+router.get('/', auth, projects);
 router.get('/:id', auth, id, project);
 router.post('/', auth, id, nameDesc, createProject);
 router.put('/:id', auth, id, nameDesc, updateProject);
