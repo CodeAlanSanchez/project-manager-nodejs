@@ -11,6 +11,7 @@ export const projects = async (req: MyRequest, res: Response) => {
   const projects = await prisma.project.findMany({
     where: {
       members: {
+        none: {},
         every: {
           userId: {
             equals: userId,
@@ -18,7 +19,18 @@ export const projects = async (req: MyRequest, res: Response) => {
         },
       },
     },
+    select: {
+      id: true,
+      name: true,
+      description: true,
+      members: {
+        select: {
+          id: true,
+        },
+      },
+    },
   });
+  console.log(projects.map((p) => p.members));
 
   return res.status(200).json({ data: projects });
 };
