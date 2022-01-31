@@ -11,8 +11,7 @@ export const projects = async (req: MyRequest, res: Response) => {
   const projects = await prisma.project.findMany({
     where: {
       members: {
-        none: {},
-        every: {
+        some: {
           userId: {
             equals: userId,
           },
