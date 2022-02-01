@@ -25,11 +25,19 @@ export const projects = async (req: MyRequest, res: Response) => {
       members: {
         select: {
           id: true,
+          isOwner: true,
+          user: {
+            select: {
+              username: true,
+            },
+          },
         },
       },
     },
+    orderBy: {
+      id: 'desc',
+    },
   });
-  console.log(projects.map((p) => p.members));
 
   return res.status(200).json({ data: projects });
 };
