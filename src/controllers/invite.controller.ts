@@ -106,6 +106,29 @@ export const declineInvite = async (req: MyRequest, res: Response) => {
       return res.status(400).json({});
     }
 
+    const invite = await prisma.invite.findFirst({ where: { id: inviteId } });
+
+    if (!invite) {
+      return res.status(400).json({
+        error: {
+          field: 'id',
+          message: 'invalid id',
+        },
+      });
+    }
+
+    if (
+      invite.receiverId == req.session.userId ||
+      invite.senderId == req.session.userId
+    ) {
+      return res.status(401).json({
+        error: {
+          field: 'authentication',
+          message: 'you are not authorized to do this action',
+        },
+      });
+    }
+
     await prisma.invite.deleteMany({
       where: { AND: [{ id: inviteId }, { receiverId: req.session.userId! }] },
     });
