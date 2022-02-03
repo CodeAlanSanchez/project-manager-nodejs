@@ -36,6 +36,32 @@ export const createInvite = async (req: MyRequest, res: Response) => {
       .json({ error: { id: 'receiver', message: 'invalid id' } });
   }
 
+  const project = await prisma.project.findFirst({
+    where: {
+      AND: [
+        { id: projectId },
+        {
+          members: {
+            some: {
+              userId: req.session.userId,
+            },
+          },
+        },
+      ],
+    },
+  });
+
+  console.log(project);
+
+  if (project) {
+    return res.status(400).json({
+      error: {
+        id: 'project',
+        message: 'user is already in project',
+      },
+    });
+  }
+
   const invite = await prisma.invite.create({
     data: {
       sender: { connect: { id: req.session.userId } },
@@ -118,8 +144,8 @@ export const declineInvite = async (req: MyRequest, res: Response) => {
     }
 
     if (
-      invite.receiverId == req.session.userId ||
-      invite.senderId == req.session.userId
+      invite.receiverId != req.session.userId ||
+      invite.senderId != req.session.userId
     ) {
       return res.status(401).json({
         error: {
