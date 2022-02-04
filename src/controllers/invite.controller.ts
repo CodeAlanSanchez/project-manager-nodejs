@@ -51,8 +51,6 @@ export const createInvite = async (req: MyRequest, res: Response) => {
     },
   });
 
-  console.log(project);
-
   if (project) {
     return res.status(400).json({
       error: {
