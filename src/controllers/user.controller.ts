@@ -1,8 +1,9 @@
-import { convertToSafeUser } from '../utils/converters';
+import { convertToSafeUser } from './../utils/converters';
 import { MyRequest } from './../utils/request';
 import { Response } from 'express';
 import { PrismaClient } from '@prisma/client';
 import argon2 from 'argon2';
+import { PrismaClientRustPanicError } from '@prisma/client/runtime';
 
 const prisma = new PrismaClient();
 
@@ -80,3 +81,20 @@ export const updateUser = async (req: MyRequest, res: Response) => {};
 
 // Delete user info
 export const deleteUser = async (req: MyRequest, res: Response) => {};
+
+export const me = async (req: MyRequest, res: Response) => {
+  if (!req.session.userId) {
+    return res.status(401).json({
+      error: {
+        field: 'authentication',
+        message: 'You are not authenticated',
+      },
+    });
+  }
+
+  const user = await prisma.user.findFirst({
+    where: { id: req.session.userId },
+  });
+
+  return res.status(200).json({ data: convertToSafeUser(user!) });
+};
