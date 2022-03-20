@@ -16,10 +16,10 @@ const app = express();
 
 const PORT = process.env.PORT || 4000;
 
+app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
+
 app.use(express.json({ limit: '30mb', strict: true }));
 app.use(express.urlencoded({ limit: '30mb', extended: true }));
-
-app.use(cors({ origin: __prod__ ? DOMAIN : undefined, credentials: true }));
 
 app.use(
   session({
@@ -31,7 +31,7 @@ app.use(
       maxAge: 1000 * 60 * 60 * 24 * 365,
       httpOnly: true,
       sameSite: 'none',
-      secure: __prod__,
+      secure: false,
       domain: __prod__ ? DOMAIN : undefined,
     },
   })
