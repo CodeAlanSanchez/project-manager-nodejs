@@ -15,7 +15,7 @@ export const invites = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(200).json({ data: invites });
+  return res.status(200).json({ invites });
 };
 
 export const invite = async () => {};
@@ -77,7 +77,7 @@ export const createInvite = async (req: MyRequest, res: Response) => {
     });
   }
 
-  return res.status(201).json({ data: invite });
+  return res.status(201).json({ invite });
 };
 
 export const updateInvite = async () => {};

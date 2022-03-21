@@ -1,9 +1,8 @@
 import { convertToSafeUser } from './../utils/converters';
 import { MyRequest } from './../utils/request';
 import { Response } from 'express';
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient, User } from '@prisma/client';
 import argon2 from 'argon2';
-import { PrismaClientRustPanicError } from '@prisma/client/runtime';
 
 const prisma = new PrismaClient();
 
@@ -52,7 +51,7 @@ export const login = async (req: MyRequest, res: Response) => {
 
   req.session.userId = user.id;
 
-  return res.status(200).json({ data: convertToSafeUser(user) });
+  return res.status(200).json(convertToSafeUser(user));
 };
 
 // Returns cookie and creates new user
@@ -73,7 +72,7 @@ export const register = async (req: MyRequest, res: Response) => {
 
   req.session.userId = user.id;
 
-  return res.status(201).json({ data: convertToSafeUser(user) });
+  return res.status(201).json(convertToSafeUser(user));
 };
 
 // Updates user info (email, username)
@@ -96,5 +95,14 @@ export const me = async (req: MyRequest, res: Response) => {
     where: { id: req.session.userId },
   });
 
-  return res.status(200).json({ data: convertToSafeUser(user!) });
+  if (!user) {
+    return res.status(500).json({
+      error: {
+        field: 'server',
+        message: 'Something went wrong, please contact support',
+      },
+    });
+  }
+
+  return res.status(200).json(convertToSafeUser(user!));
 };

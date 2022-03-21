@@ -27,7 +27,7 @@ export const bugs = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(200).json({ data: bugs });
+  return res.status(200).json({ bugs });
 };
 
 export const bug = async (req: MyRequest, res: Response) => {
@@ -67,7 +67,7 @@ export const bug = async (req: MyRequest, res: Response) => {
       },
     });
 
-  return res.status(200).json({ data: bug });
+  return res.status(200).json({ bug });
 };
 
 export const createBug = async (req: MyRequest, res: Response) => {
@@ -109,7 +109,7 @@ export const createBug = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(201).json({ data: bug });
+  return res.status(201).json({ bug });
 };
 
 export const updateBug = async (req: MyRequest, res: Response) => {
@@ -148,5 +148,5 @@ export const updateBug = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(200).json({ data: updatedBug });
+  return res.status(200).json({ updatedBug });
 };

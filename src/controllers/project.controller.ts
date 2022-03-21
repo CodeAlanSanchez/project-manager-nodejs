@@ -39,7 +39,7 @@ export const projects = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(200).json({ data: projects });
+  return res.status(200).json({ projects });
 };
 
 // Returns project if user is a member
@@ -73,7 +73,7 @@ export const project = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(200).json({ data: project });
+  return res.status(200).json({ project });
 };
 
 // Creates new project and adds new member to project
@@ -103,7 +103,7 @@ export const createProject = async (req: MyRequest, res: Response) => {
     },
   });
 
-  return res.status(201).json({ data: project });
+  return res.status(201).json({ project });
 };
 
 // Updates existing project
@@ -132,7 +132,7 @@ export const updateProject = async (req: MyRequest, res: Response) => {
       .json({ error: { field: 'id', message: 'Project not found' } });
   }
 
-  return res.status(200).json({ data: updatedProject });
+  return res.status(200).json({ updatedProject });
 };
 
 export const deleteProject = async (req: MyRequest, res: Response) => {
