@@ -86,6 +86,7 @@ export const createProject = async (req: MyRequest, res: Response) => {
       id: true,
       name: true,
       description: true,
+      status: true
     },
   });
 

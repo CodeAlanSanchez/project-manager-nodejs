@@ -53,6 +53,7 @@ model Project {
   updatedAt   DateTime @default(now())
   name        String
   description String
+  status      Int      @default(1)
   members     Member[]
   bugs        Bug[]
   invites     Invite[]
@@ -62,7 +63,7 @@ model Invite {
   id         Int      @id @default(autoincrement())
   createdAt  DateTime @default(now())
   updatedAt  DateTime @default(now())
-  receiver   User   @relation("received", fields: [receiverId], references: [id])
+  receiver   User     @relation("received", fields: [receiverId], references: [id])
   receiverId Int
   sender     Member   @relation("sent", fields: [senderId], references: [id])
   senderId   Int
