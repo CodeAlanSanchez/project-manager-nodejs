@@ -22,6 +22,7 @@ export const projects = async (req: MyRequest, res: Response) => {
       id: true,
       name: true,
       description: true,
+      status: true,
       members: {
         select: {
           id: true,
@@ -44,6 +45,7 @@ export const projects = async (req: MyRequest, res: Response) => {
 
 // Returns project if user is a member
 export const project = async (req: MyRequest, res: Response) => {
+  console.log(req.params);
   const id = parseId(req.params.id!);
 
   if (!id) {
@@ -67,7 +69,6 @@ export const project = async (req: MyRequest, res: Response) => {
           id: true,
           name: true,
           description: true,
-          status: true,
         },
       },
     },
@@ -86,7 +87,7 @@ export const createProject = async (req: MyRequest, res: Response) => {
       id: true,
       name: true,
       description: true,
-      status: true
+      status: true,
     },
   });
 
