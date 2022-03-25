@@ -7,15 +7,12 @@ import {
 } from './../controllers/bug.controller';
 import express from 'express';
 import auth from '../middleware/auth';
-import id from '../middleware/bodyId';
-import nameDesc from '../middleware/nameDesc';
+import paramId from '../middleware/paramId';
 
 const router = express.Router();
 
-router.get('/', auth, id, bugs);
-router.get('/:id', auth, bug);
-router.post('/', auth, id, nameDesc, createBug);
-router.put('/:id', auth, id, updateBug);
+router.get('/:id', auth, paramId, bug);
+router.put('/:id', auth, paramId, updateBug);
 // router.delete('/:id', auth, deleteBug);
 
 export default router;
