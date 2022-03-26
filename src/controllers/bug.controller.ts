@@ -71,7 +71,13 @@ export const bug = async (req: MyRequest, res: Response) => {
 };
 
 export const createBug = async (req: MyRequest, res: Response) => {
-  const { id, name, description } = req.body;
+  const id = parseId(req.params.id);
+
+  if (!id) {
+    return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
+  }
+
+  const { name, description } = req.body;
 
   const member = await prisma.member.findFirst({
     where: { AND: [{ projectId: id }, { userId: req.session.userId }] },

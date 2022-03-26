@@ -20,6 +20,6 @@ router.put('/:id', auth, paramId, nameDesc, updateProject);
 router.delete('/:id', auth, paramId, deleteProject);
 
 router.get('/:id/bug', auth, paramId, bugs);
-router.post('/', auth, paramId, nameDesc, createBug);
+router.post('/:id/bug', auth, paramId, nameDesc, createBug);
 
 export default router;
