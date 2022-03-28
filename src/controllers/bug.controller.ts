@@ -7,7 +7,7 @@ import { MyRequest } from './../utils/request';
 const prisma = new PrismaClient();
 
 export const bugs = async (req: MyRequest, res: Response) => {
-  const id = parseId(req.body.id);
+  const id = parseId(req.params.id);
 
   if (!id) {
     return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });

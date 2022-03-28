@@ -59,6 +59,7 @@ export const project = async (req: MyRequest, res: Response) => {
         select: {
           user: {
             select: {
+              id: true,
               username: true,
             },
           },
