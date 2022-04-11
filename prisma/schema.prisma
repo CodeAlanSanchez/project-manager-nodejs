@@ -19,6 +19,7 @@ model User {
   password  String
   members   Member[]
   received  Invite[] @relation("received")
+  sent      Invite[] @relation("sent")
 }
 
 model Member {
@@ -31,7 +32,6 @@ model Member {
   project   Project  @relation(fields: [projectId], references: [id])
   projectId Int
   isOwner   Boolean
-  sent      Invite[] @relation("sent")
 }
 
 model Bug {
@@ -65,7 +65,7 @@ model Invite {
   updatedAt  DateTime @default(now())
   receiver   User     @relation("received", fields: [receiverId], references: [id])
   receiverId Int
-  sender     Member   @relation("sent", fields: [senderId], references: [id])
+  sender     User     @relation("sent", fields: [senderId], references: [id])
   senderId   Int
   project    Project  @relation(fields: [projectId], references: [id])
   projectId  Int
