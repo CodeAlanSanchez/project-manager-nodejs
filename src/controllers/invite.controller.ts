@@ -43,28 +43,24 @@ export const createInvite = async (req: MyRequest, res: Response) => {
       .json({ error: { field: 'sender', message: 'invalid id' } });
   }
 
-  // const project = await prisma.project.findFirst({
-  //   where: {
-  //     AND: [
-  //       { id: projectId },
-  //       {
-  //         members: {
-  //           none: {
-  //             userId: receiverId,
-  //           },
-  //           some: {
-  //             userId: req.session.userId,
-  //           },
-  //         },
-  //       },
-  //     ],
-  //   },
-  // });
-
   const project = await prisma.project.findFirst({
     where: { id: projectId },
     include: { members: true, invites: true },
   });
+
+  const user = await prisma.user.findFirst({
+    where: { id: receiverId },
+  });
+
+  // Check if user being invited exists
+  if (!user) {
+    return res.status(404).json({
+      error: {
+        id: 'user',
+        message: 'user does not exist',
+      },
+    });
+  }
 
   // Check if project exists
   if (!project) {
