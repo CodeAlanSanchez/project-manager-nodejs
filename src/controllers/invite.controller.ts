@@ -23,50 +23,104 @@ export const invite = async () => {};
 export const createInvite = async (req: MyRequest, res: Response) => {
   const projectId = parseId(req.body.projectId);
   const receiverId = parseId(req.body.receiverId);
+  const inviterId = parseId(req.session.userId);
 
   if (!projectId) {
     return res
       .status(400)
-      .json({ error: { id: 'project', message: 'invalid id' } });
+      .json({ error: { field: 'project', message: 'invalid id' } });
   }
 
   if (!receiverId) {
     return res
       .status(400)
-      .json({ error: { id: 'receiver', message: 'invalid id' } });
+      .json({ error: { field: 'receiver', message: 'invalid id' } });
   }
 
+  if (!inviterId) {
+    return res
+      .status(400)
+      .json({ error: { field: 'sender', message: 'invalid id' } });
+  }
+
+  // const project = await prisma.project.findFirst({
+  //   where: {
+  //     AND: [
+  //       { id: projectId },
+  //       {
+  //         members: {
+  //           none: {
+  //             userId: receiverId,
+  //           },
+  //           some: {
+  //             userId: req.session.userId,
+  //           },
+  //         },
+  //       },
+  //     ],
+  //   },
+  // });
+
   const project = await prisma.project.findFirst({
-    where: {
-      AND: [
-        { id: projectId },
-        {
-          members: {
-            some: {
-              userId: req.session.userId,
-            },
-          },
-        },
-      ],
-    },
+    where: { id: projectId },
+    include: { members: true, invites: true },
   });
 
-  if (project) {
-    return res.status(400).json({
+  // Check if project exists
+  if (!project) {
+    return res.status(404).json({
       error: {
         id: 'project',
+        message: 'project not found',
+      },
+    });
+  }
+
+  // Check if receiver is already in project
+  if (project.members.filter((i) => i.id === receiverId).length > 0) {
+    return res.status(400).json({
+      error: {
+        id: 'user',
         message: 'user is already in project',
+      },
+    });
+  }
+
+  // Check if inviter is in project
+  if (project.members.filter((i) => i.id === inviterId).length > 0) {
+    return res.status(400).json({
+      error: {
+        id: 'authentication',
+        message: 'you are not a member of this project',
+      },
+    });
+  }
+
+  // Check if invitee is already invited to project
+  if (project.invites.filter((i) => i.receiverId === receiverId).length > 0) {
+    return res.status(400).json({
+      error: {
+        id: 'invite',
+        message: 'user is already invited to project',
       },
     });
   }
 
   const invite = await prisma.invite.create({
     data: {
-      sender: { connect: { id: req.session.userId } },
-      receiver: { connect: { id: receiverId } },
-      project: { connect: { id: projectId } },
+      senderId: inviterId,
+      receiverId: receiverId,
+      projectId: projectId,
+    },
+    select: {
+      id: true,
+      project: true,
+      receiver: true,
+      sender: true,
     },
   });
+
+  console.log(invite);
 
   if (!invite) {
     return res.status(400).json({
