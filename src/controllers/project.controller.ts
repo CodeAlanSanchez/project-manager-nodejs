@@ -45,7 +45,6 @@ export const projects = async (req: MyRequest, res: Response) => {
 
 // Returns project if user is a member
 export const project = async (req: MyRequest, res: Response) => {
-  console.log(req.params);
   const id = parseId(req.params.id!);
 
   if (!id) {
