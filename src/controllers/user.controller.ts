@@ -82,15 +82,6 @@ export const updateUser = async (req: MyRequest, res: Response) => {};
 export const deleteUser = async (req: MyRequest, res: Response) => {};
 
 export const me = async (req: MyRequest, res: Response) => {
-  if (!req.session.userId) {
-    return res.status(401).json({
-      error: {
-        field: 'authentication',
-        message: 'You are not authenticated',
-      },
-    });
-  }
-
   const user = await prisma.user.findFirst({
     where: { id: req.session.userId },
   });
@@ -105,4 +96,10 @@ export const me = async (req: MyRequest, res: Response) => {
   }
 
   return res.status(200).json(convertToSafeUser(user!));
+};
+
+export const logout = async (req: MyRequest, res: Response) => {
+  req.session.destroy(() => {
+    return res.status(200).json({});
+  });
 };
