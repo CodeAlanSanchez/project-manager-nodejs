@@ -13,6 +13,13 @@ export const invites = async (req: MyRequest, res: Response) => {
         { senderId: req.session.userId },
       ],
     },
+    select: {
+      id: true,
+      createdAt: true,
+      projectId: true,
+      receiverId: true,
+      senderId: true,
+    },
   });
 
   return res.status(200).json({ invites });
