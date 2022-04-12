@@ -172,7 +172,7 @@ export const acceptInvite = async (req: MyRequest, res: Response) => {
       }),
     ]);
 
-    return res.status(204).json({});
+    return res.status(204).json({ id: inviteId });
   } catch (error) {
     console.error(error);
     return res.status(500).json({});
@@ -214,7 +214,7 @@ export const declineInvite = async (req: MyRequest, res: Response) => {
       where: { AND: [{ id: inviteId }, { receiverId: req.session.userId! }] },
     });
 
-    return res.status(204).json({});
+    return res.status(204).json({ id: inviteId });
   } catch (error) {
     console.error(error);
     return res.status(500).json({});
