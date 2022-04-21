@@ -156,3 +156,21 @@ export const updateBug = async (req: MyRequest, res: Response) => {
 
   return res.status(200).json({ updatedBug });
 };
+export const deletebug = async (req: MyRequest, res: Response) => {
+  const id = parseInt(req.params.id);
+
+  if (!id) {
+    return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
+  }
+
+  const bug = await prisma.bug.delete({ where: { id: id } });
+
+  if (!bug) {
+    res.status(500).json({
+      field: 'server',
+      message: 'something went wrong',
+    });
+  }
+
+  return res.status(204);
+};
