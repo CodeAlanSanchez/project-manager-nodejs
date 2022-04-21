@@ -163,14 +163,16 @@ export const deletebug = async (req: MyRequest, res: Response) => {
     return res.status(400).json({ error: { id: 'id', message: 'invalid id' } });
   }
 
-  const bug = await prisma.bug.delete({ where: { id: id } });
+  const bug = prisma.bug.findFirst({ where: { id: id } });
 
   if (!bug) {
-    res.status(500).json({
+    res.status(404).json({
       field: 'server',
       message: 'something went wrong',
     });
   }
+
+  await prisma.bug.delete({ where: { id: id } });
 
   return res.status(204);
 };
