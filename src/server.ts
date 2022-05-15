@@ -14,6 +14,8 @@ console.log(__prod__, DOMAIN);
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 const PORT = process.env.PORT || 4000;
 
 app.use(cors({ origin: process.env.CORS_ORIGIN, credentials: true }));
